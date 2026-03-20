@@ -1,6 +1,12 @@
 FROM nginx:1.27-alpine
 
-# conf.d snippets are included inside http { }; they must not contain events/http blocks.
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Override in Cloud Run: hostname only (no https://) from each service's internal URL.
+ENV AUTH_HOST=auth.invalid \
+    PROFILE_HOST=profile.invalid \
+    PROJECTS_HOST=projects.invalid \
+    BLOG_HOST=blog.invalid \
+    CV_HOST=cv.invalid
+
+COPY ./templates/default.conf.template /etc/nginx/templates/default.conf.template
 
 COPY index.php /var/www/html/index.php
