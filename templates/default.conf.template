@@ -2,37 +2,46 @@ server {
   listen 8080;
   resolver 169.254.169.254 valid=10s ipv6=off;
 
+  # proxy_pass must not use a URI part when $backend is a variable, or Nginx
+  # replaces the whole request path with "/" (Express then sees "Cannot GET /").
+  # Strip the location prefix with rewrite + break, then pass to https://$backend.
+
   location /auth/ {
     set $backend ${AUTH_HOST};
-    proxy_pass https://$backend/;
+    rewrite ^/auth/(.*)$ /$1 break;
+    proxy_pass https://$backend;
     proxy_ssl_server_name on;
     proxy_ssl_name $backend;
   }
 
   location /profile/ {
     set $backend ${PROFILE_HOST};
-    proxy_pass https://$backend/;
+    rewrite ^/profile/(.*)$ /$1 break;
+    proxy_pass https://$backend;
     proxy_ssl_server_name on;
     proxy_ssl_name $backend;
   }
 
   location /projects/ {
     set $backend ${PROJECTS_HOST};
-    proxy_pass https://$backend/;
+    rewrite ^/projects/(.*)$ /$1 break;
+    proxy_pass https://$backend;
     proxy_ssl_server_name on;
     proxy_ssl_name $backend;
   }
 
   location /blog/ {
     set $backend ${BLOG_HOST};
-    proxy_pass https://$backend/;
+    rewrite ^/blog/(.*)$ /$1 break;
+    proxy_pass https://$backend;
     proxy_ssl_server_name on;
     proxy_ssl_name $backend;
   }
 
   location /cv/ {
     set $backend ${CV_HOST};
-    proxy_pass https://$backend/;
+    rewrite ^/cv/(.*)$ /$1 break;
+    proxy_pass https://$backend;
     proxy_ssl_server_name on;
     proxy_ssl_name $backend;
   }
