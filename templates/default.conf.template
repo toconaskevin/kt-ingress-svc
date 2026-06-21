@@ -1,48 +1,54 @@
 server {
   listen 8080;
-  
+  resolver ${NGINX_RESOLVER} valid=10s ipv6=off;
+
   location /auth/ {
+    set $backend ${AUTH_HOST};
     rewrite ^/auth/(.*)$ /$1 break;
-    proxy_pass https://${AUTH_HOST};
+    proxy_pass https://$backend;
     proxy_http_version 1.1;
-    proxy_set_header Host ${AUTH_HOST};
+    proxy_set_header Host $backend;
     proxy_ssl_server_name on;
-    proxy_ssl_name ${AUTH_HOST};
+    proxy_ssl_name $backend;
   }
 
   location /profile/ {
+    set $backend ${PROFILE_HOST};
     rewrite ^/profile/(.*)$ /$1 break;
-    proxy_pass https://${PROFILE_HOST};
+    proxy_pass https://$backend;
     proxy_http_version 1.1;
-    proxy_set_header Host ${PROFILE_HOST};
+    proxy_set_header Host $backend;
     proxy_ssl_server_name on;
-    proxy_ssl_name ${PROFILE_HOST};
+    proxy_ssl_name $backend;
   }
 
   location /projects/ {
+    set $backend ${PROJECTS_HOST};
     rewrite ^/projects/(.*)$ /$1 break;
-    proxy_pass https://${PROJECTS_HOST};
+    proxy_pass https://$backend;
     proxy_http_version 1.1;
-    proxy_set_header Host ${PROJECTS_HOST};
+    proxy_set_header Host $backend;
     proxy_ssl_server_name on;
-    proxy_ssl_name ${PROJECTS_HOST};
+    proxy_ssl_name $backend;
   }
 
   location /blog/ {
+    set $backend ${BLOG_HOST};
     rewrite ^/blog/(.*)$ /$1 break;
-    proxy_pass https://${BLOG_HOST};
+    proxy_pass https://$backend;
     proxy_http_version 1.1;
-    proxy_set_header Host ${BLOG_HOST};
+    proxy_set_header Host $backend;
     proxy_ssl_server_name on;
-    proxy_ssl_name ${BLOG_HOST};
+    proxy_ssl_name $backend;
   }
 
   location /cv/ {
+    set $backend ${CV_HOST};
     rewrite ^/cv/(.*)$ /$1 break;
-    proxy_pass https://${CV_HOST};
+    proxy_pass https://$backend;
     proxy_http_version 1.1;
-    proxy_set_header Host ${CV_HOST};
+    proxy_set_header Host $backend;
     proxy_ssl_server_name on;
-    proxy_ssl_name ${CV_HOST};
+    proxy_ssl_name $backend;
   }
 }
